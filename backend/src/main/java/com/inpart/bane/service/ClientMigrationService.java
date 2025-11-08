@@ -51,10 +51,22 @@ public class ClientMigrationService {
     }
 
     private void seedClients() {
-        legacyClients.put(1L, new Client(1L, "Alice Johnson", "alice.johnson@example.com", false));
-        legacyClients.put(2L, new Client(2L, "Bruno Silva", "bruno.silva@example.com", false));
-        legacyClients.put(3L, new Client(3L, "Chen Li", "chen.li@example.com", false));
-        legacyClients.put(4L, new Client(4L, "Diana Prince", "diana.prince@example.com", false));
+        registerLegacyClient(new Client(1L, "Feddasa Bote", "feddasa.bote@example.com", false));
+        registerLegacyClient(new Client(2L, "Ebissa Chemeda", "ebissa.chemeda@example.com", false));
+        registerLegacyClient(new Client(3L, "Mintesnot Sibhatu", "mintesnot.sibhatu@example.com", false));
+        registerLegacyClient(new Client(4L, "Esayas Niguse", "esayas.niguse@example.com", false));
+        registerLegacyClient(new Client(5L, "Efrem Shimels", "efrem.shimels@example.com", true));
+        registerLegacyClient(new Client(6L, "Addisu Birile", "addisu.birile@example.com", true));
+        registerLegacyClient(new Client(7L, "Chala Demesa", "chala.demesa@example.com", false));
+    }
+
+    private void registerLegacyClient(Client client) {
+        legacyClients.put(client.getId(), client);
+
+        if (client.isMigrated()) {
+            Client migratedCopy = new Client(client.getId(), client.getName(), client.getEmail(), true);
+            newClients.put(migratedCopy.getId(), migratedCopy);
+        }
     }
 }
 

@@ -23,8 +23,10 @@ class ClientMigrationServiceTest {
     void shouldLoadSeedLegacyClients() {
         List<Client> legacyClients = service.getLegacyClients();
 
-        assertThat(legacyClients).hasSize(4);
-        assertThat(legacyClients).allMatch(client -> !client.isMigrated());
+        assertThat(legacyClients).hasSize(7);
+        assertThat(legacyClients).filteredOn(Client::isMigrated).hasSize(2);
+        assertThat(legacyClients).filteredOn(client -> !client.isMigrated()).hasSize(5);
+        assertThat(service.getNewClients()).hasSize(2);
     }
 
     @Test
@@ -32,7 +34,7 @@ class ClientMigrationServiceTest {
         Client migrated = service.migrateClient(1L);
 
         assertThat(migrated.isMigrated()).isTrue();
-        assertThat(service.getNewClients()).extracting(Client::getId).containsExactly(1L);
+        assertThat(service.getNewClients()).extracting(Client::getId).contains(1L);
         assertThat(service.getLegacyClients()).filteredOn(Client::getId, 1L)
                 .first()
                 .extracting(Client::isMigrated)
